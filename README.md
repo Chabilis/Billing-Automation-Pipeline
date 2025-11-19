@@ -1,4 +1,4 @@
-# Billing Automation Pipeline 🐍💸
+# Billing Automation Pipeline 🐍💸 Update as of 11-19-2025
 
 Real-world project I built to eliminate manual billing for 100+ successful trips per week at my part-time job.
 
@@ -26,8 +26,17 @@ Hit me up → marloualbion@gmail.com or LinkedIn https://www.linkedin.com/in/mar
 **PROGRESS**
 
 11-18-2025 - 5% - OCR test complete
+11-19-2025 - extracted excel file with tkinter but bugs
 
 
 **LOGS**
 
 11-18-2025 - Done work/test OCR raw data form pdf docs
+11-19-2025 - Complete the 1st extracted excel file and Encounter a lot of bugs
+
+**IMPROVEMENT**
+
+*Fix Bugs*
+
+- (Today) Fix print_1st2nd.xlsx from templates folder as clean format - DONE 11-19-2025
+- (Tommorrow) Key mapping from excel_generator.py must be worked. The extraction is done but just copy paste
