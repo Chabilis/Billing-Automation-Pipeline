@@ -1,3 +1,28 @@
+# Billing Automation Pipeline 🐍💸
+
+Real-world project I built to eliminate manual billing for 100+ successful trips per week at my part-time job.
+
+**Before**: 4–6 hours/week of copy-paste hell in Excel  
+**After**: < 5 minutes + fully automated invoices & reports
+
+### Current Features
+- Pull & filter successful trips from CSV/database
+- Calculate charges automatically
+- Generate beautiful PDF invoices (ReportLab)
+- FastAPI endpoints ready for webhooks & integrations
+- Scheduled daily runs (APScheduler)
+
+### Tech stack
+FastAPI • Python • Pandas • ReportLab • Stripe (coming) • Docker • Render/Railway
+
+Live demo → https://billing-pipeline.onrender.com/docs
+
+Still adding Stripe webhooks and email notifications this week — follow along!
+
+**PROGRESS**
+11-18-2025 - 5% - OCR test complete
+
+
 **LOGS**
 
 11-18-2025 - Done work/test OCR raw data form pdf docs
