@@ -25,14 +25,14 @@ Hit me up → marloualbion@gmail.com or LinkedIn https://www.linkedin.com/in/mar
 
 **PROGRESS**
 
-11-18-2025 - 5% - OCR test complete
-11-19-2025 - extracted excel file with tkinter but bugs
+- 11-18-2025 - 5% - OCR test complete
+- 11-19-2025 - extracted excel file with tkinter but bugs
 
 
 **LOGS**
 
-11-18-2025 - Done work/test OCR raw data form pdf docs
-11-19-2025 - Complete the 1st extracted excel file and Encounter a lot of bugs
+- 11-18-2025 - Done work/test OCR raw data form pdf docs
+- 11-19-2025 - Complete the 1st extracted excel file and Encounter a lot of bugs
 
 **IMPROVEMENT**
 
