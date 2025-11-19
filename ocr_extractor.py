@@ -64,12 +64,12 @@ def extractdata(raw_text):
         else:
             data["ref_nos"] = "/".join(ref_num)
 
-    # 6. Plate No — look for JAR, etc. (you can expand later) --------------------------------------
+    # 6. plate No (under construction) --------------------------------------
     plate_match = re.search(r"([A-Z]{3}[- ]?\d{3,4})", raw_text)
     if plate_match:
         data["plate_no"] = plate_match.group(1).replace(" ", "-")
     
-    # 7. Origin — keyword matching (we’ll make this smart with INFO sheet later) ---------------------------
+    # 7. origin (under construction) ---------------------------
     origins = ["JSI LILOAN", "5G", "BB5", "JENTEC", "FAST"]
     for origin in origins:
         if origin.upper() in raw_text.upper():
