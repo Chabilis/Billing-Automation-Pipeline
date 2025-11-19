@@ -1,1 +1,2 @@
+**LOGS
 11-18-2025 - Done work/test OCR raw data form pdf docs
