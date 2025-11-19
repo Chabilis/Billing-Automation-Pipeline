@@ -24,6 +24,7 @@ Currently fixing and updating my database for this project in this week.
 Hit me up → marloualbion@gmail.com or LinkedIn https://www.linkedin.com/in/marlou-bation-27a529344/
 
 **PROGRESS**
+
 11-18-2025 - 5% - OCR test complete
 
 
