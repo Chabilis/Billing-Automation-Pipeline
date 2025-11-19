@@ -15,7 +15,7 @@ Real-world project I built to eliminate manual billing for 100+ successful trips
 ### Tech stack
 FastAPI • Python • Pandas • ReportLab • Stripe (coming) • Docker • Render/Railway
 
-Live demo → https://billing-pipeline.onrender.com/docs
+Live demo → "Under Construction"
 
 Still adding Stripe webhooks and email notifications this week — follow along!
 
