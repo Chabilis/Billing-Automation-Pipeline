@@ -36,6 +36,7 @@ Hit me up → marloualbion@gmail.com or LinkedIn https://www.linkedin.com/in/mar
 - 11-18-2025 - Done work/test OCR raw data form pdf docs
 - 11-19-2025 - Complete the 1st extracted excel file and Encounter a lot of bugs
 - 11-20-2025 - "Day-Off"
+- 11-21-2025 - Ill focus more on key-mapping especially for tommorow. No distractions.
 
 **IMPROVEMENT**
 
