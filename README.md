@@ -2,6 +2,8 @@
 
 Real-world project I built to eliminate manual billing for 100+ successful trips per week at my part-time job.
 
+Working/Coding 3-4 free hours per day.
+
 **Before**: 4–6 hours/week of copy-paste hell in Excel  
 **After**: < 5 minutes + fully automated invoices & reports
 
@@ -33,6 +35,7 @@ Hit me up → marloualbion@gmail.com or LinkedIn https://www.linkedin.com/in/mar
 
 - 11-18-2025 - Done work/test OCR raw data form pdf docs
 - 11-19-2025 - Complete the 1st extracted excel file and Encounter a lot of bugs
+- 11-20-2025 - "Day-Off"
 
 **IMPROVEMENT**
 
