@@ -13,7 +13,7 @@ Run: `python GUI_userinput.py`
 
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
-from datetime import datetime
+from datetime import datetime, date
 import sys
 import io
 from pathlib import Path
@@ -24,14 +24,16 @@ import threading
 # Import waybill functions
 sys.path.insert(0, str(Path(__file__).parent))
 from Database.read_waybills import get_next_unclaimed_waybill, mark_waybill_used, save_waybills_to_files
+from Database.soa_manager import get_next_unclaimed_soa, init_soa_db
 
 
 class TwoTripApp(tk.Tk):
-	def __init__(self):
+	def __init__(self, current_soa: int):
 		super().__init__()
 		self.title("Two-Trip Waybill Entry")
 		self.geometry("900x800")
 		self.current_waybill = None
+		self.current_soa = current_soa
 		self.trip1_data = None
 		self.trip2_data = None
 		self._reference_cache = None
@@ -298,7 +300,7 @@ H2: {trip_data.get('helper2', '')}"""
 		return data
 
 	def confirm_trip1(self):
-		"""Confirm 1st trip: validate, store, write to Excel, show 2nd trip input."""
+		"""Confirm 1st trip: validate, store, write to Excel, allocate to SOA, show 2nd trip input."""
 		data = self.validate_trip_data(self.trip1_fields)
 		if not data:
 			return
@@ -313,6 +315,26 @@ H2: {trip_data.get('helper2', '')}"""
 			messagebox.showerror("Error", f"Could not write to Excel: {e}")
 			self.log_print(f"Error: {e}")
 			return
+
+		# Allocate trip to current SOA with metadata
+		try:
+			from Database.soa_manager import allocate_trip_to_soa
+			trip_metadata = {
+				"date": data.get("date"),
+				"plate": data.get("plate_no"),
+				"origin": data.get("origin"),
+				"ticket": data.get("trip_ticket"),
+				"blocks": data.get("total_blocks"),
+				"waybill": data.get("waybill_no"),
+			}
+			trip_no = allocate_trip_to_soa(self.current_soa, trip_metadata=trip_metadata)
+			self.log_print(f"Allocated trip {trip_no} to SOA {self.current_soa}")
+		except ValueError as e:
+			messagebox.showerror("SOA Full", f"SOA {self.current_soa} is full (max 20 trips). Please use a different SOA.")
+			self.log_print(f"Error: {e}")
+			return
+		except Exception as e:
+			self.log_print(f"Warning: Could not allocate to SOA: {e}")
 
 		# Move to 2nd trip input frame and auto-fill 2nd waybill = 1st waybill + 1 when possible
 		self.show_trip2_frame()
@@ -330,7 +352,7 @@ H2: {trip_data.get('helper2', '')}"""
 			pass
 
 	def confirm_trip2(self):
-		"""Confirm 2nd trip: validate, store, then show final options."""
+		"""Confirm 2nd trip: validate, store, allocate to SOA, then show final options."""
 		data = self.validate_trip_data(self.trip2_fields)
 		if not data:
 			return
@@ -345,6 +367,26 @@ H2: {trip_data.get('helper2', '')}"""
 			messagebox.showerror("Error", f"Could not write to Excel: {e}")
 			self.log_print(f"Error: {e}")
 			return
+
+		# Allocate trip to current SOA with metadata
+		try:
+			from Database.soa_manager import allocate_trip_to_soa
+			trip_metadata = {
+				"date": data.get("date"),
+				"plate": data.get("plate_no"),
+				"origin": data.get("origin"),
+				"ticket": data.get("trip_ticket"),
+				"blocks": data.get("total_blocks"),
+				"waybill": data.get("waybill_no"),
+			}
+			trip_no = allocate_trip_to_soa(self.current_soa, trip_metadata=trip_metadata)
+			self.log_print(f"Allocated trip {trip_no} to SOA {self.current_soa}")
+		except ValueError as e:
+			messagebox.showerror("SOA Full", f"SOA {self.current_soa} is full (max 20 trips). Please use a different SOA.")
+			self.log_print(f"Error: {e}")
+			return
+		except Exception as e:
+			self.log_print(f"Warning: Could not allocate to SOA: {e}")
 
 		# Mark both waybills as used now that both trips are done (if present)
 		def _mark_async(w1, w2):
@@ -476,7 +518,7 @@ H2: {trip_data.get('helper2', '')}"""
 					self.log_print("Failed to write WAYBILL RECORD after several attempts. Please close the Excel file and try again.")
 
 	def export_to_pdf(self):
-		"""Open the filled print Excel and then clear the template for next use."""
+		"""Open the filled print Excel, export SOA weekly file with populated trip data, then clear the template for next use."""
 		try:
 			ref_path = Path(__file__).parent / "reference" / "print_1st2ndtrip.xlsx"
 			wb1 = self.trip1_data.get("waybill_no", "") if self.trip1_data else ""
@@ -493,10 +535,18 @@ H2: {trip_data.get('helper2', '')}"""
 			except Exception as e:
 				self.log_print(f"Could not open file automatically: {e}")
 
+			# Export the SOA weekly file with populated trip data
+			try:
+				from Database.soa_manager import export_soa_to_excel
+				export_soa_to_excel(self.current_soa)
+				self.log_print(f"Exported SOA {self.current_soa} weekly file with trip data.")
+			except Exception as e:
+				self.log_print(f"Warning: Could not export SOA weekly file: {e}")
+
 			# Clear the GUI (not the Excel file) so the form is ready for next entry
 			self.clear_all_and_restart()
 
-			messagebox.showinfo("Done", f"Opened {ref_path}. GUI cleared for next entry.")
+			messagebox.showinfo("Done", f"Opened {ref_path}. SOA {self.current_soa} weekly file exported. GUI cleared for next entry.")
 		except Exception as e:
 			messagebox.showerror("Error", f"Could not finalize export: {e}")
 			self.log_print(f"Error: {e}")
@@ -704,6 +754,29 @@ H2: {trip_data.get('helper2', '')}"""
 
 
 if __name__ == "__main__":
-	app = TwoTripApp()
+	from datetime import date
+	
+	# Show SOA selection dialog on startup
+	next_soa = get_next_unclaimed_soa()
+	today = date.today().strftime("%b-%d-%Y")
+	
+	if next_soa is None:
+		messagebox.showerror("Error", "No unclaimed SOA found in SOA.json")
+		sys.exit(1)
+	
+	# Confirm SOA with user
+	result = messagebox.askyesno(
+		"Create new SOA",
+		f"Create new SOA {next_soa} for today ({today})?\n\nClick Yes to continue, No to exit."
+	)
+	
+	if not result:
+		sys.exit(0)
+	
+	# Initialize SOA manager (creates/updates soa_last_trip.json and soa_records.json)
+	init_soa_db()
+	
+	# Launch app with current SOA
+	app = TwoTripApp(current_soa=next_soa)
 	app.mainloop()
 
